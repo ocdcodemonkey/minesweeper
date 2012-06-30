@@ -10,11 +10,10 @@
 	height: 19px;
 	line-height: 19px;
 	text-align: center;
-	border-color: #888;
-	border-width: 1px;
-	border-style: none solid solid none;
+	border: 1px solid #888;
 	position: absolute;
 	background: #fff;
+	cursor: default;
 }
 .mine {
 	background: #a00;

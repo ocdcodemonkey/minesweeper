@@ -42,30 +42,57 @@ minesweeper =
 			var x = Math.floor((event.clientX - pos.left) / 20);
 			var y = Math.floor((event.clientY - pos.top) / 20);
 
-			me.renderSquare((y * me.width) + x);
+			console.log('Poking block at ' + x + ', ' + y);
+
+			me.pokeBlock(x, y);
 		});
 	},
 
-	renderSquare: function(index)
+	renderBlock: function(x, y, value)
 	{
 		$block = $('<div class="square"></div>');
 
-		if (this.grid[index] > 8) // Mine
+		if (value > 8) // Mine
 		{
 			$block.addClass('mine');
 		}
-		else if (this.grid[index] > 0) // Adjacent
+		else if (value > 0) // Adjacent
 		{
-			$block.text(this.grid[index]);
+			$block.text(value);
 		}
 
-		var y = Math.floor(index / this.width);
-		var x = index - (y * this.width);
-
-		$block.css('left', (x * 20) + 'px');
-		$block.css('top', (y * 20) + 'px');
+		$block.css('left', (x * 20 - 1) + 'px');
+		$block.css('top', (y * 20 - 1) + 'px');
 
 		this.$e.append($block);
+	},
+
+	pokeBlock: function(x, y)
+	{
+		var i = (y * this.width) + x;
+		if (i < 0 || i >= this.limit)
+		{
+			return;
+		}
+
+		var value = this.grid[i];
+		if (value == 'x')
+		{
+			return;
+		}
+		this.grid[i] = 'x';
+
+		if (!value)
+		{
+			for (var yi = -1; yi <= 1; yi++)
+			{
+				for (var xi = -1; xi <= 1; xi++)
+				{
+					this.pokeBlock(x + xi, y + yi);
+				}
+			}			
+		}
+		this.renderBlock(x, y, value);
 	}
 
 
