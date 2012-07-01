@@ -3,16 +3,26 @@
  */
 minesweeper =
 {
-	width:		20,
-	height:		20, 
-	mines:		100,
-
+	width:		0,
+	height:		0, 
+	mines:		0,
 	limit:		0,
 	grid:		null,
 
 	init: function()
 	{
 		this.$e = document.id('minesweeper');
+
+		this.newGame(20, 20, 100);
+
+		this.$e.addListener('click', this.blockClickHandler.bind(this));
+	},
+
+	newGame: function(width, height, mines)
+	{
+		this.width = width;
+		this.height	= height;
+		this.mines = mines;
 		this.limit = this.width * this.height;
 		this.grid = [];
 
@@ -50,39 +60,24 @@ minesweeper =
 			}			
 		}
 
+		this.$e.empty();
 		this.$e.setStyles(
 		{
 			width:	(this.width * 20) + 'px', 
 			height:	(this.height * 20) + 'px'
-		});
-
-		this.$e.addListener('click', this.blockClickHandler.bind(this));
-	},
-
-	newGame: function(width, height, mines)
-	{
-		// Build an empty grid.
-		var grid = [];
-		for (var h = 0; h < height; h++)
-		{
-			grid[h] = [];
-			for (var w = 0; w < width; w++)
-			{
-				grid[h][w] =
-				{
-					nearby: 0,
-					mine: false, 
-				}
-			}
-		}
+		});		
 	},
 
 	blockClickHandler: function(e)
 	{
+		// Ignore bubbled clicks.
+		if (e.target != this.$e)
+		{
+			return;
+		}
+
 		var x = Math.floor(e.layerX / 20);
 		var y = Math.floor(e.layerY / 20);
-
-		console.log('Poking block at ' + x + ', ' + y);
 
 		this.pokeBlock(x, y);
 	},
