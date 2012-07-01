@@ -9,13 +9,30 @@ minesweeper =
 	limit:		0,
 	grid:		null,
 
+	$e: null,
+	$grid: null,
+	$score: null,
+
 	init: function()
 	{
+		this.$grid	= new Element('div',
+		{
+			id:		 'minesweeper-grid',
+			'class': 'column'
+		});
+
+		this.$score	= new Element('div',
+		{
+			id:		 'minesweeper-score',
+			'class': 'column'
+		});
+
 		this.$e = document.id('minesweeper');
+		this.$e.adopt(this.$grid, this.$score);
 
 		this.newGame(20, 20, 100);
 
-		this.$e.addListener('click', this.blockClickHandler.bind(this));
+		this.$grid.addListener('click', this.blockClickHandler.bind(this));
 	},
 
 	newGame: function(width, height, mines)
@@ -60,18 +77,21 @@ minesweeper =
 			}			
 		}
 
-		this.$e.empty();
-		this.$e.setStyles(
+		this.$grid.empty();
+		this.$grid.setStyles(
 		{
 			width:	(this.width * 20) + 'px', 
 			height:	(this.height * 20) + 'px'
-		});		
+		});
+
+		this.revealed = 0;
+		this.updateScore();
 	},
 
 	blockClickHandler: function(e)
 	{
 		// Ignore bubbled clicks.
-		if (e.target != this.$e)
+		if (e.target != this.$grid)
 		{
 			return;
 		}
@@ -80,6 +100,7 @@ minesweeper =
 		var y = Math.floor(e.layerY / 20);
 
 		this.pokeBlock(x, y);
+		this.updateScore();
 	},
 
 	renderBlock: function(x, y, value)
@@ -90,7 +111,7 @@ minesweeper =
 		{
 			$block.addClass('mine');
 		}
-		else if (value & 0xf) // Adjacent
+		else if (value & 0xf) // Adjacent to a mine
 		{
 			$block.set('text', value & 0xf);
 		}
@@ -101,23 +122,27 @@ minesweeper =
 			top:	(y * 20 - 1) + 'px'
 		});
 
-		this.$e.adopt($block);
+		this.$grid.adopt($block);
 	},
 
 	pokeBlock: function(x, y, index)
 	{
 		if (!this.isValidBlock(x, y))
 		{
-			return;
+			return; // Don't poke invalid blocks.
 		}
 
 		index = (y * this.width) + x;
 		if (this.grid[index] & 0x20)
 		{
-			return;
+			return; // Don't poke blocks that are already shown.
 		}
-		this.grid[index] = this.grid[index] | 0x20;
 
+		// Mark the block as revealed.
+		this.grid[index] = this.grid[index] | 0x20;
+		this.revealed++;
+
+		// No adjacent mines? Empty block, expand everything around it.
 		var value = this.grid[index] & 0xf;
 		if (!value)
 		{
@@ -135,6 +160,17 @@ minesweeper =
 	isValidBlock: function(x, y)
 	{
 		return (x >= 0) && (x < this.width) && (y >= 0) && (y < this.height);
+	},
+
+	/*
+	 * Updates the score panel.
+	 */
+	updateScore: function()
+	{
+		this.$score.set('html',
+			'<p>' + 0 + ' /' + this.mines + ' mines</p>' +
+			'<p>' + this.revealed + ' /' + this.limit + ' squares</p>'
+		);
 	}
 
 };
