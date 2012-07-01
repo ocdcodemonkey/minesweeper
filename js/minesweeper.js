@@ -8,27 +8,43 @@ minesweeper =
 	mines:		0,
 	limit:		0,
 	grid:		null,
-
-	$e: null,
-	$grid: null,
-	$score: null,
+	isRunning:	false,
+	timer:		null,
+	$e:			null,
+	$grid:		null,
+	$score: 	null,
 
 	init: function()
 	{
+		this.$newGame = new Element('a',
+		{
+			'class': 'button',
+			text: 'New Game',
+			href: '#',
+			events:
+			{
+				click: this.newGame.bind(this, 20, 20, 100)
+			}
+		});
+
+		this.$score = new Element('div');
+
+		this.$sidebar = new Element('div',
+		{
+			id:		 'minesweeper-sidebar',
+			'class': 'column'
+		});
+		this.$sidebar.adopt(this.$score, this.$newGame);
+
 		this.$grid	= new Element('div',
 		{
 			id:		 'minesweeper-grid',
 			'class': 'column'
 		});
 
-		this.$score	= new Element('div',
-		{
-			id:		 'minesweeper-score',
-			'class': 'column'
-		});
 
 		this.$e = document.id('minesweeper');
-		this.$e.adopt(this.$grid, this.$score);
+		this.$e.adopt(this.$grid, this.$sidebar);
 
 
 		this.newGame(20, 20, 100);
@@ -103,6 +119,7 @@ minesweeper =
 
 		// Select an opening area.
 		this.revealed = 0;
+		this.isRunning = true;
 
 		while (true)
 		{
@@ -121,6 +138,11 @@ minesweeper =
 
 	blockClickHandler: function(e)
 	{
+		if (!this.isRunning)
+		{
+			return;
+		}
+
 		// Ignore bubbled clicks.
 		if (e.target != this.$grid)
 		{
@@ -169,6 +191,12 @@ minesweeper =
 			return; // Don't poke blocks that are already shown.
 		}
 
+		// Found a mine?
+		if (this.grid[index] & 0x10)
+		{
+			this.endGame(false);
+		}
+
 		// Mark the block as revealed.
 		this.grid[index] = this.grid[index] | 0x20;
 		this.revealed++;
@@ -199,9 +227,14 @@ minesweeper =
 	updateScore: function()
 	{
 		this.$score.set('html',
-			'<p>' + 0 + ' /' + this.mines + ' mines</p>' +
-			'<p>' + this.revealed + ' /' + this.limit + ' squares</p>'
+			'<div class="statistic"><span class="figure">' + 0 + '</span>/<label>' + this.mines + '<br>mines</label></div>' +
+			'<div class="statistic"><span class="figure">' + this.revealed + '</span>/</span><label>' + this.limit + '<br>blocks</label></div>'
 		);
+	},
+
+	endGame: function(win)
+	{
+		this.isRunning = false;
 	}
 
 };
