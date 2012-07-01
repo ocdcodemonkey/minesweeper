@@ -8,23 +8,28 @@
 	"buffers":
 	[
 		{
-			"file": "minesweeper.js",
+			"file": "css/minesweeper.css",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 355,
+				"line_ending": "Windows",
+				"name": "#minesweeper {"
+			}
+		},
+		{
+			"file": "js/minesweeper.js",
+			"settings":
+			{
+				"buffer_size": 2472,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "<!DOCTYPE HTML>\n<html>\n	<head>\n		<script src=\"js/minesweeper.js\"></script>\n		<script src=\"js/minesweeper.js\"></script>\n	</head>\n	<body>\n		<div id=\"minesweeper\"></div>\n	</body>\n</html>",
 			"file": "index.html",
-			"file_size": 85,
-			"file_write_time": 129855280645438017,
 			"settings":
 			{
-				"buffer_size": 183,
-				"line_ending": "Windows",
-				"name": "<html>"
+				"buffer_size": 436,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -52,14 +57,21 @@
 	},
 	"file_history":
 	[
+		"/C/Users/finite/Work/isrighthere/Workspace/tv/public/jscript/sctv/hardware/Motorola.js",
+		"/C/Users/finite/Work/isrighthere/Workspace/tv/application/layouts/scripts/sctv.phtml",
+		"/C/Users/finite/Projects/minesweeper/index.html",
+		"/C/Users/finite/Projects/minesweeper/js/minesweeper.js",
+		"/C/Users/finite/Projects/minesweeper/readme.txt",
+		"/C/Users/finite/Projects/minesweeper/images/grid.png",
+		"/C/Users/finite/Projects/minesweeper/minesweeper.js",
+		"/C/Users/finite/Projects/minesweeper/minesweeper.sublime-project",
 		"/C/Users/finite/Downloads/Sublime/Data/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Users/finite/Downloads/Sublime/Data/Packages/Default/Preferences.sublime-settings",
-		"/C/Users/finite/Downloads/Sublime/Data/Packages/User/Preferences.sublime-settings",
-		"/C/Users/finite/Projects/minesweeper/minesweeper.js"
+		"/C/Users/finite/Downloads/Sublime/Data/Packages/User/Preferences.sublime-settings"
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -73,6 +85,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"me.",
+			"me"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -95,50 +109,76 @@
 			[
 				{
 					"buffer": 0,
-					"file": "minesweeper.js",
+					"file": "css/minesweeper.css",
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 355,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								323,
+								323
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4
+							"auto_name": "#minesweeper {",
+							"syntax": "Packages/CSS/CSS.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "index.html",
+					"file": "js/minesweeper.js",
 					"settings":
 					{
-						"buffer_size": 183,
+						"buffer_size": 2472,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								183,
-								183
+								1664,
+								1664
 							]
 						],
 						"settings":
 						{
-							"auto_name": "<html>",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1708.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								131,
+								131
+							]
+						],
+						"settings":
+						{
 							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -156,7 +196,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -203,9 +243,9 @@
 		"width": 0.0
 	},
 	"show_minimap": true,
-	"show_open_files": true,
+	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 171.0,
+	"side_bar_width": 222.0,
 	"status_bar_visible": true
 }

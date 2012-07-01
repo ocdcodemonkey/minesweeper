@@ -12,7 +12,7 @@ minesweeper =
 
 	init: function()
 	{
-		this.$e = $('#minesweeper');
+		this.$e = document.id('minesweeper');
 		this.limit = this.width * this.height;
 		this.grid = [];
 
@@ -20,81 +20,126 @@ minesweeper =
 		for (var m = 0; m < this.mines; m++)
 		{
 			var index = Math.floor(Math.random() * this.limit);
-			this.grid[index] = 9;
+			var x = index % this.width;
+			var y = Math.floor(index / this.width)
 
-			for (var y = -1; y <= 1; y++)
+			// Don't put mines ontop of mines.
+			if (this.grid[index] & 0x10)
 			{
-				for (var x = -1; x <= 1; x++)
+				m--;
+				continue;
+			}
+
+			if (this.grid[index] == undefined)
+			{
+				this.grid[index] = 0;
+			}
+			this.grid[index] = this.grid[index] | 0x10;
+
+
+			for (var dY = -1; dY <= 1; dY++)
+			{
+				for (var dX = -1; dX <= 1; dX++)
 				{
-					var i		 = index + (y * this.width) + x;
-					this.grid[i] = (this.grid[i] || 0) + 1;
+					if (this.isValidBlock(x + dX, y + dY))
+					{
+						var i = (y + dY) * this.width + x + dX;
+						this.grid[i] = (this.grid[i] || 0) + 1;
+					}
+				}
+			}			
+		}
+
+		this.$e.setStyles(
+		{
+			width:	(this.width * 20) + 'px', 
+			height:	(this.height * 20) + 'px'
+		});
+
+		this.$e.addListener('click', this.blockClickHandler.bind(this));
+	},
+
+	newGame: function(width, height, mines)
+	{
+		// Build an empty grid.
+		var grid = [];
+		for (var h = 0; h < height; h++)
+		{
+			grid[h] = [];
+			for (var w = 0; w < width; w++)
+			{
+				grid[h][w] =
+				{
+					nearby: 0,
+					mine: false, 
 				}
 			}
 		}
+	},
 
-		this.$e.width((this.width * 20) + 'px');
-		this.$e.height((this.height * 20) + 'px');
+	blockClickHandler: function(e)
+	{
+		var x = Math.floor(e.layerX / 20);
+		var y = Math.floor(e.layerY / 20);
 
-		var me = this;
-		this.$e.click(function(event)
-		{
-			var pos = me.$e.position();
-			var x = Math.floor((event.clientX - pos.left) / 20);
-			var y = Math.floor((event.clientY - pos.top) / 20);
+		console.log('Poking block at ' + x + ', ' + y);
 
-			console.log('Poking block at ' + x + ', ' + y);
-
-			me.pokeBlock(x, y);
-		});
+		this.pokeBlock(x, y);
 	},
 
 	renderBlock: function(x, y, value)
 	{
-		$block = $('<div class="square"></div>');
+		$block = new Element('div', { 'class': 'square' });
 
-		if (value > 8) // Mine
+		if (value & 0x10) // Mine
 		{
 			$block.addClass('mine');
 		}
-		else if (value > 0) // Adjacent
+		else if (value & 0xf) // Adjacent
 		{
-			$block.text(value);
+			$block.set('text', value & 0xf);
 		}
 
-		$block.css('left', (x * 20 - 1) + 'px');
-		$block.css('top', (y * 20 - 1) + 'px');
+		$block.setStyles(
+		{
+			left:	(x * 20 - 1) + 'px',
+			top:	(y * 20 - 1) + 'px'
+		});
 
-		this.$e.append($block);
+		this.$e.adopt($block);
 	},
 
-	pokeBlock: function(x, y)
+	pokeBlock: function(x, y, index)
 	{
-		var i = (y * this.width) + x;
-		if (i < 0 || i >= this.limit)
+		if (!this.isValidBlock(x, y))
 		{
 			return;
 		}
 
-		var value = this.grid[i];
-		if (value == 'x')
+		index = (y * this.width) + x;
+		if (this.grid[index] & 0x20)
 		{
 			return;
 		}
-		this.grid[i] = 'x';
+		this.grid[index] = this.grid[index] | 0x20;
 
+		var value = this.grid[index] & 0xf;
 		if (!value)
 		{
-			for (var yi = -1; yi <= 1; yi++)
+			for (var dY = -1; dY <= 1; dY++)
 			{
-				for (var xi = -1; xi <= 1; xi++)
+				for (var dX = -1; dX <= 1; dX++)
 				{
-					this.pokeBlock(x + xi, y + yi);
+					this.pokeBlock(x + dX, y + dY);
 				}
-			}			
+			}
 		}
-		this.renderBlock(x, y, value);
+		this.renderBlock(x, y, this.grid[index]);
+	},
+
+	isValidBlock: function(x, y)
+	{
+		return (x >= 0) && (x < this.width) && (y >= 0) && (y < this.height);
 	}
 
-
 };
-minesweeper.init();
