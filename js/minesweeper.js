@@ -30,6 +30,7 @@ minesweeper =
 		this.$e = document.id('minesweeper');
 		this.$e.adopt(this.$grid, this.$score);
 
+
 		this.newGame(20, 20, 100);
 
 		this.$grid.addListener('click', this.blockClickHandler.bind(this));
@@ -37,9 +38,24 @@ minesweeper =
 
 	newGame: function(width, height, mines)
 	{
-		this.width = width;
+		var fx = new Fx.Tween(this.$grid,
+		{
+    		property: 'opacity',
+    		onComplete: function()
+			{
+				this.startGame(width, height, mines);
+				this.$grid.fade('in');
+			}
+			.bind(this)
+    	});
+    	fx.start(0);
+	},
+
+	startGame: function(width, height, mines)
+	{
+		this.width	= width;
 		this.height	= height;
-		this.mines = mines;
+		this.mines	= mines;
 		this.limit = this.width * this.height;
 		this.grid = [];
 
@@ -48,7 +64,7 @@ minesweeper =
 		{
 			var index = Math.floor(Math.random() * this.limit);
 			var x = index % this.width;
-			var y = Math.floor(index / this.width)
+			var y = Math.floor(index / this.width);
 
 			// Don't put mines ontop of mines.
 			if (this.grid[index] & 0x10)
@@ -77,6 +93,7 @@ minesweeper =
 			}			
 		}
 
+		// Set up the grid.
 		this.$grid.empty();
 		this.$grid.setStyles(
 		{
@@ -84,8 +101,22 @@ minesweeper =
 			height:	(this.height * 20) + 'px'
 		});
 
+		// Select an opening area.
 		this.revealed = 0;
-		this.updateScore();
+
+		while (true)
+		{
+			var index = Math.floor(Math.random() * this.limit);
+			if (!this.grid[index])
+			{
+				var x = index % this.width;
+				var y = Math.floor(index / this.width);
+
+				this.pokeBlock(x, y);
+				this.updateScore();
+				break;
+			}
+		}
 	},
 
 	blockClickHandler: function(e)
